@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block con %}
+
+<div class="container">
+    <h1><b>BOOK PAGE</b></h1>
+
+    <div class="text-end">
+        <a href="{% url 'book:create' %}" class="btn btn-success"> + BOOKMARK </a>
+    </div>
+
+    <div class="row">
+        {% for i in bset %}
+        <div class="col-sm-4 mb-3 mb-sm-0 mt-4">
+            <div class="card">
+                <div class="card-body" {% if i.impo == True %}style="background-color: antiquewhite;"{% endif %}>
+                    <h5 class="card-title"><b>{{i.site_name}}</b></h5>
+                    <p class="card-text">{{i.site_con|truncatewords:4}}</p>
+                    <div class="text-end">
+                        <a href="{{i.site_url}}" class="btn btn-outline-primary">이동</a>
+                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#bd{{forloop.counter}}">
+                        삭제
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <h3 class="text-center"><b>북마크를 추가해보세요</b></h3>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% for i in bset %}
+<div class="modal fade" id="bd{{forloop.counter}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">북마크 삭제</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            정말 삭제하시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <a href="{% url 'book:delete' i.id %}" class="btn btn-danger">삭제</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}

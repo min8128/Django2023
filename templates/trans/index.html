@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block con %}
+
+<br><br>
+
+<form class="row">
+    <div class="col-sm-1"></div>
+
+    <div class="col-sm-4">
+        <textarea name="initial" placeholder="INPUT SENTENCE" class="form-control" style="height:310px;">{{ ini }}</textarea>
+    </div>
+
+    <div class="col-sm-2">
+        <select name="from" style="width:100%;" class="form-select">
+            <option value="detect">언어감지</option>
+            {% for key, value in dic.items %}
+            <option value="{{key}}" {% if key == fr %}selected{% endif %}>{{ value }}</option>
+            {% endfor %}
+        </select><br>
+
+        <button class="btn btn-primary btn-lg" style="width:100%;">번역</button><br><br>
+
+        <a href="{% url 'trans:change' %}?initial={{ini}}&from={{fr}}&to={{to}}" class="btn btn-dark btn-lg" style="width:100%;" type="button">변경</a><br><br>
+
+        <select name="to" style="width:100%;" class="form-select">
+            {% for key, value in dic.items %}
+            <option value="{{key}}" {% if key == to %}selected{% endif %}>{{ value }}</option>
+            {% endfor %}
+        </select><br>
+
+    </div>
+
+    <div class="col-sm-4">
+        <textarea name="final" placeholder="INPUT SENTENCE" class="form-control" style="height:310px;" disabled>{{ fin }}</textarea>
+    </div>
+</form>
+
+<style>
+    textarea {
+        resize: none;
+    }
+</style>
+
+
+{% endblock %}

@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+
+{% block con %}
+<div class="container">
+
+<h1><b>{{ b.subject }}</b></h1>
+
+<div class="row mt-5">
+    <div class="col-sm-9">
+        <textarea class="form-control" style="height:200px" disabled>{{ b.content }}</textarea>
+    </div>
+    <div class="col-sm-3">
+        <img src="{{ b.writer.getpic }}" width="100%">
+        <div class="text-center mt-3">
+            <h5>written by <b>{{ b.writer }}</b></h5>
+        </div>
+        <div class="text-end mt-3">
+            {{ b.pubdate|date:'Y년 m월 d일 H : i' }}
+        </div>
+    </div>
+</div>
+
+<div class="text-end mt-4">
+    {% if not user in b.likey.all %}
+    <a href="{% url 'board:likey' b.id %}" class="btn btn-secondary">좋아요</a>
+    {% else %}
+    <a href="{% url 'board:unlikey' b.id %}" class="btn btn-outline-secondary">좋아요 취소</a>
+    {% endif %}
+    <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#book">
+        ✨
+    </button>
+    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#reply">
+        댓글
+    </button>
+    <a href="{% url 'board:index' %}" class="btn btn-dark">글목록</a>
+    {% if user == b.writer %}
+    <a href="{% url 'board:update' b.id %}" class="btn btn-dark">글수정</a>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#remove">
+        글삭제
+    </button>
+    {% endif %}
+
+</div>
+
+<br><hr>
+
+<div class="container">
+    <div class="row">
+        {% for i in cset %}
+        <div class="col-sm-1">
+            <img src="{{ i.replyer.getpic }}" style="width:90%;" id="round">
+        </div>
+
+        <div class="col-sm-9">
+            <h6><b>{{i.replyer}}</b> {{i.pubdate|date:'Y년 m월 d일 H : i'}} {{i.updated}}</h6>
+            <p>{{i.comment}}</p>
+        </div>
+
+        <div class="col-sm-2">
+            {% if i.replyer == user %}
+            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#rupdate{{forloop.counter}}">
+                수정
+            </button>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rdelete{{forloop.counter}}">
+                삭제
+            </button>
+            {% endif %}
+        </div>
+
+        <br><br><br><br>
+
+        {% empty %}
+        <div class="text-center">댓글을 달아주세요!</div>
+        {% endfor %}
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="remove" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><b>게시글 삭제 알림창</b></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                정말 삭제하시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <a href="{% url 'board:delete_content' b.id %}" class="btn btn-danger">삭제</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="reply" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><b>댓글 추가</b></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'board:add_reply' b.id %}">
+                <div class="modal-body">
+                    <input placeholder="INPUT COMMENT" name="comment" class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button class="btn btn-primary">등록</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% for i in cset %}
+<div class="modal fade" id="rupdate{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><b>댓글 수정</b></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'board:update_reply' b.id i.id %}">
+                <div class="modal-body">
+                    <input placeholder="INPUT COMMENT" name="comment" class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button class="btn btn-warning">수정</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% for i in cset %}
+<div class="modal fade" id="rdelete{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><b>댓글 삭제</b></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'board:add_reply' b.id %}">
+                <div class="modal-body">
+                    정말 삭제하시겠습니까?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <a href="{% url 'board:delete_reply' b.id i.id %}" class="btn btn-danger">삭제</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<div class="modal fade" id="book" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel"><b>북마크 추가</b></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{% url 'book:create' %}">
+                {% csrf_token %}
+
+                <div class="modal-body">
+                    <input type="checkbox" class="btn-check" id="btn-check-outlined" autocomplete="off" name="ip">
+                    <label class="btn btn-outline-warning" for="btn-check-outlined">✨</label><br><br>
+                    <textarea class="form-control" placeholder="사이트를 간략하게 설명해주세요" style="height: 100px;" name="con"></textarea>
+
+                    <input type="hidden" name="nm" value="[BOARD]::{{b.subject}}">
+                    <input type="hidden" name="url" value="{{request.path}}">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">닫기</button>
+                    <button class="btn btn-outline-warning">추가</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    #round {
+        border-radius: 50%;
+        width: 70px;
+        height: 70px;
+        overflow: hidden;
+    }
+</style>
+
+</div>
+
+{% endblock %}

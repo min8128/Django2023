@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block con %}
+
+<div class="container">
+
+    <h1><b>할 일 목록</b></h1><br>
+
+    <form method="post" action="{% url 'todo:create' %}">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-sm-10"><input class="form-control" placeholder="INPUT TODOS" name="name"></div>
+            <div class="col-sm-2"><button class="btn btn-outline-primary" style="height:100%">+ ADD</button></div>       
+        </div>
+
+    </form>
+
+    <br><hr><br>
+
+    <div class="row">
+        {% for i in tset %}
+            {% if i.done == False %}
+                <div class="col-sm-10"><h4><b>{{forloop.counter}}. {{i.name}}</b></h4></div>
+            {% else %}
+                <div class="col-sm-10"><h4><del><b>{{forloop.counter}}. {{i.name}}</b></del></h4></div>
+            {% endif %}
+
+            {% if i.done == False %}
+                <div class="col-sm-1">
+                    <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#finished{{forloop.counter}}">
+                        완료
+                    </button>
+                </div>
+            {% else %}
+                <div class="col-sm-1">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#cancel{{forloop.counter}}">
+                        취소
+                    </button>
+                </div>
+            {% endif %}
+
+            <div class="col-sm-1">
+                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete{{forloop.counter}}">
+                    삭제
+                </button>
+            </div>
+            <br><br>
+
+        {% empty %}
+        <h3 class="text-center"><b>할 일이 없습니다!! 부럽네요..</b></h3>
+
+        {% endfor %}
+    </div>
+
+</div>
+
+{% for i in tset %}
+<div class="modal fade" id="cancel{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">다시하기</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                할 일을 다시해야겠군요<br>
+                화이팅
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                <a href="{% url 'todo:finish' i.id %}" class="btn btn-primary">완료</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% for i in tset %}
+<div class="modal fade" id="finished{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">할 일 완료</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                할 일을 끝내셨습니까?<br>
+                대단하군요!
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <a href="{% url 'todo:finish' i.id %}" class="btn btn-primary">완료</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% for i in tset %}
+<div class="modal fade" id="delete{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">할 일 삭제</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                정말 삭제하시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <a href="{% url 'todo:delete' i.id %}" class="btn btn-danger">삭제</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}
