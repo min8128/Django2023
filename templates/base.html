@@ -117,7 +117,7 @@
         {% for i in messages %}
             {% if i.tags == 'info' %}
             <div class="alert alert-primary d-flex align-items-center" role="alert">
-                <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Info:" style="height:50px; width:50px;"><use xlink:href="#info-fill"/></svg>
+                <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Info:" style="height:20px; width:20px;"><use xlink:href="#info-fill"/></svg>
                 <div>
                     {{ i.message }}
                 </div>
@@ -125,7 +125,7 @@
 
             {% elif i.tags == 'warning' %}
             <div class="alert alert-warning d-flex align-items-center" role="alert">
-                <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Warning:" style="height:50px; width:50px;"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Warning:" style="height:20px; width:20px;"><use xlink:href="#exclamation-triangle-fill"/></svg>
                 <div>
                     {{ i.message }}
                 </div>
@@ -133,7 +133,7 @@
 
             {% elif i.tags == 'success' %}
             <div class="alert alert-success d-flex align-items-center" role="alert">
-                <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Success:" style="height:50px; width:50px;"><use xlink:href="#check-circle-fill"/></svg>
+                <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Success:" style="height:20px; width:20px;"><use xlink:href="#check-circle-fill"/></svg>
                 <div>
                     {{ i.message }}
                 </div>
@@ -141,7 +141,7 @@
 
             {% elif i.tags == 'error' %}
             <div class="alert alert-danger d-flex align-items-center" role="alert">
-                <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Danger:" style="height:50px; width:50px;"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Danger:" style="height:20px; width:20px;"><use xlink:href="#exclamation-triangle-fill"/></svg>
                 <div>
                     {{ i.message }}
                 </div>
