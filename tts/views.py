@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 import googletrans
 from googletrans import Translator
 from gtts import gTTS
-from playsound import playsound
 
 # Create your views here.
 def fnmake():
